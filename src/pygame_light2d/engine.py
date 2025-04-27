@@ -62,6 +62,8 @@ class LightingEngine:
                                       fullscreen=fullscreen, resizable=resizable,
                                       noframe=noframe, scaled=scaled, depth=depth,
                                       display=display, vsync=vsync)
+        
+        
 
         # Load shaders
         self._load_shaders()
@@ -118,6 +120,8 @@ class LightingEngine:
         self._layer_bg.texture.repeat_y = False
         self._layer_fg.texture.repeat_x = False
         self._layer_fg.texture.repeat_y = False
+        
+        self.light_output_target = self._graphics.screen
 
     def _create_ssbos(self, max_num_hulls=1024):
         # Create SSBOs
@@ -398,12 +402,12 @@ class LightingEngine:
         self._prog_mask['ambient'].value = self._ambient
 
         self._graphics.render(self._layer_bg.texture,
-                              self._graphics.screen,
+                              self.light_output_target,
                               scale=(
                                   self._screen_res[0]/self._native_res[0], self._screen_res[1]/self._native_res[1]),
                               shader=self._prog_mask)
 
     def _render_foreground(self):
-        self._graphics.render(self._layer_fg.texture, self._graphics.screen,
+        self._graphics.render(self._layer_fg.texture, self.light_output_target,
                               scale=(
                                   self._screen_res[0]/self._native_res[0], self._screen_res[1]/self._native_res[1]))
